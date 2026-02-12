@@ -18,5 +18,7 @@ class DatabaseSeeder extends Seeder
 
         // Ejecutar el seeder del Usuario Admin
         $this->call(AdminUserSeeder::class);
+
+        $this->call(BandasSeeder::class);
     }
 }

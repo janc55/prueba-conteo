@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Banda;
+use App\Models\Fraternidad;
 use Illuminate\Http\Request;
 
 class BandaController extends Controller
@@ -58,5 +59,19 @@ class BandaController extends Controller
         
         $banda->delete();
         return response()->json(['message' => 'Banda eliminada'], 200);
+    }
+    
+    public function asignarBandaFraternidad(Request $request)
+    {
+        $request->validate([
+            'banda_id' => 'required|exists:bandas,id',
+            'fraternidad_id' => 'required|exists:fraternidades,id',
+            'cantidad_integrantes' => 'required|integer',
+        ]);
+
+        $fraternidad = Fraternidad::find($request->fraternidad_id);
+        $fraternidad->bandas()->attach($request->banda_id, ['cantidad_integrantes' => $request->cantidad_integrantes]);
+
+        return response()->json(['message' => 'Banda asignada a fraternidad correctamente'], 201);
     }
 }

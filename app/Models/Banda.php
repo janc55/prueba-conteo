@@ -22,4 +22,10 @@ class Banda extends Model
     {
         return $this->hasMany(Conteo::class);
     }
+
+    // Relación Uno a Muchos con Conteos de Bandas
+    public function conteosBandas()
+    {
+        return $this->hasMany(ConteoBanda::class);
+    }
 }

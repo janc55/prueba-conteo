@@ -10,14 +10,21 @@ class Conteo extends Model
     use HasFactory;
 
     protected $fillable = [
-        'fraternidad_id', 
-        'banda_id', 
-        'cantidad_integrantes', 
-        'bloques', 
-        'ubicacion', 
-        'turno', 
-        'contador_id'
+        'fraternidad_id',
+        'cantidad_integrantes',
+        'bloques',
+        'ubicacion',
+        'turno',
+        'contador_id',
+        'gestion_id',
+        'varones',
+        'mujeres',
     ];
+
+    public function gestion()
+    {
+        return $this->belongsTo(Gestion::class);
+    }
 
     // Relación con Fraternidad (Uno a Muchos)
     public function fraternidad()
@@ -36,4 +43,10 @@ class Conteo extends Model
     {
         return $this->belongsTo(User::class, 'contador_id');
     }
+
+    // Relación con ConteoBanda
+    //public function conteoBandas()
+    //{
+    //    return $this->hasMany(ConteoBanda::class, 'fraternidad_id', 'fraternidad_id');
+    //}
 }

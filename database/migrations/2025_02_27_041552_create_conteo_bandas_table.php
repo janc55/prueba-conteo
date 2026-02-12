@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('conteos', function (Blueprint $table) {
+        Schema::create('conteo_bandas', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('banda_id')->constrained('bandas')->onDelete('cascade');
             $table->foreignId('fraternidad_id')->constrained('fraternidades')->onDelete('cascade');
             $table->integer('cantidad_integrantes');
-            $table->integer('bloques');
-            $table->string('ubicacion'); // Cambiado a string
-            $table->string('turno')->nullable(); // Cambiado a string, nullable
+            $table->string('ubicacion');
+            $table->string('turno')->nullable();
             $table->foreignId('contador_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('conteos');
+        Schema::dropIfExists('conteo_bandas');
     }
 };

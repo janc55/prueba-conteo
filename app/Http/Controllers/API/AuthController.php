@@ -11,26 +11,30 @@ use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
-    // 📌 Registro de usuario
+    // 📌 Registro de usuario (Solo Admin)
     public function register(Request $request)
     {
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
-            'rol' => 'in:contador,admin' // Opcional: por defecto será "contador"
+            'rol' => 'required|in:contador,admin'
         ]);
+
+        // Verificar si el usuario que realiza la petición es admin
+        if ($request->user()->rol !== 'admin') {
+            return response()->json(['message' => 'No tienes permisos para crear usuarios.'], 403);
+        }
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'rol' => $request->rol ?? 'contador',
+            'rol' => $request->rol,
         ]);
 
         return response()->json([
             'message' => 'Usuario registrado con éxito',
-            'token' => $user->createToken('API Token')->plainTextToken,
             'user' => $user
         ], 201);
     }
@@ -42,19 +46,19 @@ class AuthController extends Controller
             'email' => 'required|string|email',
             'password' => 'required|string',
         ]);
-    
+
         $user = User::where('email', $request->email)->first();
-    
+
         if (!$user || !Hash::check($request->password, $user->password)) {
             Log::error("Error de login: Usuario no encontrado o contraseña incorrecta.", [
                 'email' => $request->email
             ]);
-    
+
             return response()->json([
                 'message' => 'Las credenciales proporcionadas son incorrectas.'
             ], 401);
         }
-    
+
         return response()->json([
             'message' => 'Inicio de sesión exitoso',
             'token' => $user->createToken('API Token')->plainTextToken,

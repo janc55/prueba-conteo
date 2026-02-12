@@ -20,6 +20,12 @@ class Fraternidad extends Model
         return $this->hasMany(Conteo::class);
     }
 
+    // Relación Uno a Muchos con Conteos de Bandas
+    public function conteosBandas()
+    {
+        return $this->hasMany(ConteoBanda::class);
+    }
+
     public function getPromedioIntegrantesAttribute()
     {
         return $this->conteos()->avg('cantidad_integrantes') ?? 0;
